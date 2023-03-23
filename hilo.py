@@ -1,9 +1,16 @@
+# HILO, a simple number guessing game where the computer is doing the guessing
+#
+
 from math import log2
 
 lo = None
 hi = None
 ready_to_play = False
 
+# get either the low or high extent of the guessing range
+# str is the name of the extent, either "hi" or "lo"
+# enforces the game rules of the extent must be a non-negative integer (numeric) value
+#
 def get_game_extent(str):
     while True:
         input_str = input(f"{str}: ")
@@ -17,8 +24,10 @@ def get_game_extent(str):
             continue
         return input_num
 
-msg = "both low and high must be non-negative integers, low <= high"
-
+# get the extents of the game from the user, keep asking
+# until we get good answers for both
+# enforces the rule that low <= high
+#
 while True:
     print("Enter the low and high range of the game")
     lo = get_game_extent("lo")
@@ -28,12 +37,16 @@ while True:
         continue
     break
 
+# given an input string, returns a new string with added terminal escape codes that
+# when printed, displays the intput string underlined
+#
 def underline(str):
     return "\033[4m" + str + "\033[0m"
 
 n_guesses = 0
 print(f"I should be able to guess the number in about {int(log2((hi - lo + 1)))} guesses")
 
+# string format template for the main game loop's prompt 
 prompt = "Guess #{num_guesses}: {guess}? ("
 prompt += underline('h') + "igher, "
 prompt += underline('l') + "ower, "
@@ -41,6 +54,10 @@ prompt += underline('c') + "orrect): "
 
 got_it = False
 
+# main game loop: keep going until either the user indicates that
+# the computer has guessed correctly, or until the computer determines
+# that the user is cheating and has not answered correctly!
+#
 while lo <= hi and not got_it:
     n_guesses += 1
     g = (lo + hi) // 2
