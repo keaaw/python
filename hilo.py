@@ -7,22 +7,24 @@ lo = None
 hi = None
 ready_to_play = False
 
+
 # get either the low or high extent of the guessing range
 # str is the name of the extent, either "hi" or "lo"
 # enforces the game rules of the extent must be a non-negative integer (numeric) value
 #
-def get_game_extent(str):
+def get_game_extent(s):
     while True:
-        input_str = input(f"{str}: ")
+        input_str = input(f"{s}: ")
         try:
             input_num = int(input_str)
-        except:
-            print(f"{str} must be an integer")
+        except ValueError:
+            print(f"{s} must be an integer")
             continue
         if input_num < 0:
-            print(f"{str} must be non-negative")
+            print(f"{s} must be non-negative")
             continue
         return input_num
+
 
 # get the extents of the game from the user, keep asking
 # until we get good answers for both
@@ -32,21 +34,23 @@ while True:
     print("Enter the low and high range of the game")
     lo = get_game_extent("lo")
     hi = get_game_extent("hi")
-    if (lo > hi):
+    if lo > hi:
         print("low must be less than or equal to high")
         continue
     break
 
+
 # given an input string, returns a new string with added terminal escape codes that
 # when printed, displays the intput string underlined
 #
-def underline(str):
-    return "\033[4m" + str + "\033[0m"
+def underline(s):
+    return "\033[4m" + s + "\033[0m"
+
 
 n_guesses = 0
-print(f"I should be able to guess the number in about {int(log2((hi - lo + 1)))} guesses")
+print(f"I should be able to guess the number in about {int(log2(hi - lo + 1))} guesses")
 
-# string format template for the main game loop's prompt 
+# string format template for the main game loop's prompt
 prompt = "Guess #{num_guesses}: {guess}? ("
 prompt += underline('h') + "igher, "
 prompt += underline('l') + "ower, "
@@ -62,6 +66,7 @@ while lo <= hi and not got_it:
     n_guesses += 1
     g = (lo + hi) // 2
     good_response = False
+    ans = None
     while not good_response:
         ans = input(prompt.format(num_guesses=n_guesses, guess=g))
         good_response = ans[0] in ['h', 'l', 'c']
